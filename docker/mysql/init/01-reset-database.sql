@@ -132,7 +132,7 @@ CREATE TABLE project_members (
         'DEVELOPER'
     ) NOT NULL,
     joined_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-\    CONSTRAINT uq_project_members_project_user_role UNIQUE (project_id, user_id, role),
+    CONSTRAINT uq_project_members_project_user_role UNIQUE (project_id, user_id, role),
     CONSTRAINT fk_project_members_project_workspace FOREIGN KEY (project_id, workspace_id) REFERENCES projects (id, workspace_id) ON DELETE CASCADE,
     CONSTRAINT fk_project_members_workspace_member FOREIGN KEY (workspace_id, user_id) REFERENCES workspace_members (workspace_id, user_id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
