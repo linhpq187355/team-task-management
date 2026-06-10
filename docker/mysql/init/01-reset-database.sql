@@ -2,39 +2,11 @@ CREATE DATABASE IF NOT EXISTS team_task_management CHARACTER SET utf8mb4 COLLATE
 
 USE team_task_management;
 
-SET FOREIGN_KEY_CHECKS = 0;
-
-DROP TABLE IF EXISTS notifications;
-
-DROP TABLE IF EXISTS workspace_invitations;
-
-DROP TABLE IF EXISTS work_item_attachments;
-
-DROP TABLE IF EXISTS work_item_comments;
-
-DROP TABLE IF EXISTS work_item_activity_logs;
-
-DROP TABLE IF EXISTS work_items;
-
-DROP TABLE IF EXISTS project_members;
-
-DROP TABLE IF EXISTS projects;
-
-DROP TABLE IF EXISTS workspace_members;
-
-DROP TABLE IF EXISTS workspaces;
-
-DROP TABLE IF EXISTS refresh_tokens;
-
-DROP TABLE IF EXISTS users;
-
-SET FOREIGN_KEY_CHECKS = 1;
-
 -- =========================================================
 -- 1. USERS
 -- =========================================================
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
@@ -50,7 +22,7 @@ CREATE TABLE users (
 -- 2. REFRESH TOKENS
 -- =========================================================
 
-CREATE TABLE refresh_tokens (
+CREATE TABLE IF NOT EXISTS refresh_tokens (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     token_hash VARCHAR(255) NOT NULL,
@@ -65,7 +37,7 @@ CREATE TABLE refresh_tokens (
 -- 3. WORKSPACES
 -- =========================================================
 
-CREATE TABLE workspaces (
+CREATE TABLE IF NOT EXISTS workspaces (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     description TEXT NULL,
@@ -80,7 +52,7 @@ CREATE TABLE workspaces (
 -- 4. WORKSPACE MEMBERS
 -- =========================================================
 
-CREATE TABLE workspace_members (
+CREATE TABLE IF NOT EXISTS workspace_members (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     workspace_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
@@ -95,7 +67,7 @@ CREATE TABLE workspace_members (
 -- 5. PROJECTS
 -- =========================================================
 
-CREATE TABLE projects (
+CREATE TABLE IF NOT EXISTS projects (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     workspace_id BIGINT NOT NULL,
     name VARCHAR(150) NOT NULL,
@@ -122,7 +94,7 @@ CREATE TABLE projects (
 -- workspace_id được lưu thêm để DB có thể kiểm tra:
 -- user muốn vào project thì bắt buộc phải là member của workspace trước.
 
-CREATE TABLE project_members (
+CREATE TABLE IF NOT EXISTS project_members (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     workspace_id BIGINT NOT NULL,
     project_id BIGINT NOT NULL,
@@ -143,7 +115,7 @@ CREATE TABLE project_members (
 -- V1 chỉ dùng type = 'TASK'
 -- Sau này có thể dùng type = 'BUG' mà không cần đổi schema.
 
-CREATE TABLE work_items (
+CREATE TABLE IF NOT EXISTS work_items (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     workspace_id BIGINT NOT NULL,
     project_id BIGINT NOT NULL,
@@ -171,7 +143,8 @@ CREATE TABLE work_items (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_work_items_project_workspace FOREIGN KEY (project_id, workspace_id) REFERENCES projects (id, workspace_id) ON DELETE CASCADE,
-    CONSTRAINT fk_work_items_assignee FOREIGN KEY (assignee_id) REFERENCES users (id) ON DELETE SET NULL,    CONSTRAINT fk_work_items_created_by FOREIGN KEY (created_by) REFERENCES users (id) ON DELETE RESTRICT,
+    CONSTRAINT fk_work_items_assignee FOREIGN KEY (assignee_id) REFERENCES users (id) ON DELETE SET NULL,
+    CONSTRAINT fk_work_items_created_by FOREIGN KEY (created_by) REFERENCES users (id) ON DELETE RESTRICT,
     CONSTRAINT fk_work_items_related FOREIGN KEY (related_work_item_id) REFERENCES work_items (id) ON DELETE SET NULL
 ) ENGINE = InnoDB;
 
@@ -179,7 +152,7 @@ CREATE TABLE work_items (
 -- 8. WORK ITEM COMMENTS - V2
 -- =========================================================
 
-CREATE TABLE work_item_comments (
+CREATE TABLE IF NOT EXISTS work_item_comments (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     work_item_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
@@ -195,7 +168,7 @@ CREATE TABLE work_item_comments (
 -- 9. WORK ITEM ATTACHMENTS - V2
 -- =========================================================
 
-CREATE TABLE work_item_attachments (
+CREATE TABLE IF NOT EXISTS work_item_attachments (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     work_item_id BIGINT NOT NULL,
     uploaded_by BIGINT NOT NULL,
@@ -220,7 +193,7 @@ CREATE TABLE work_item_attachments (
 -- Bảng log chỉ insert, không update.
 -- Không cần updated_at.
 
-CREATE TABLE work_item_activity_logs (
+CREATE TABLE IF NOT EXISTS work_item_activity_logs (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     work_item_id BIGINT NOT NULL,
     actor_id BIGINT NOT NULL,
@@ -238,7 +211,7 @@ CREATE TABLE work_item_activity_logs (
 -- V1 chưa dùng.
 -- V2 dùng khi làm email invitation thật.
 
-CREATE TABLE workspace_invitations (
+CREATE TABLE IF NOT EXISTS workspace_invitations (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     workspace_id BIGINT NOT NULL,
     email VARCHAR(255) NOT NULL,
