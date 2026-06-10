@@ -185,6 +185,42 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
+    public ProjectMemberResponse addProjectMemberRole(Long projectId, Long userId, ProjectMemberRole role) {
+        Long currentUserId = currentUserService.getCurrentUserId();
+        Project project = getActiveProject(projectId);
+        requireCanManageProject(projectId, currentUserId);
+        User user = getUser(userId);
+
+        Long workspaceId = project.getWorkspace().getId();
+        if (!workspaceMemberRepository.existsByWorkspaceIdAndMemberId(workspaceId, userId)) {
+            throw new BadRequestException("User must be a workspace member before joining this project");
+        }
+        if (projectMemberRepository.existsByProjectIdAndMemberIdAndRole(projectId, userId, role)) {
+            throw new DuplicateResourceException("User already has this project role");
+        }
+
+        ProjectMember member = new ProjectMember();
+        member.setWorkspace(project.getWorkspace());
+        member.setProject(project);
+        member.setMember(user);
+        member.setRole(role);
+        member.setJoinedAt(LocalDateTime.now());
+        return toProjectMemberResponse(projectMemberRepository.save(member));
+    }
+
+    @Override
+    @Transactional
+    public void removeProjectMemberRole(Long projectId, Long userId, ProjectMemberRole role) {
+        Long currentUserId = currentUserService.getCurrentUserId();
+        getActiveProject(projectId);
+        requireCanManageProject(projectId, currentUserId);
+        ProjectMember member = projectMemberRepository.findByProjectIdAndMemberIdAndRole(projectId, userId, role)
+                .orElseThrow(() -> new ResourceNotFoundException("Project member role not found"));
+        projectMemberRepository.delete(member);
+    }
+
+    @Override
+    @Transactional
     public void removeProjectMember(Long projectId, Long userId) {
         Long currentUserId = currentUserService.getCurrentUserId();
         getActiveProject(projectId);

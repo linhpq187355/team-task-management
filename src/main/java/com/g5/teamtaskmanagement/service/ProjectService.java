@@ -5,6 +5,7 @@ import com.g5.teamtaskmanagement.dto.request.ProjectRequest;
 import com.g5.teamtaskmanagement.dto.request.UpdateProjectMemberRoleRequest;
 import com.g5.teamtaskmanagement.dto.response.ProjectMemberResponse;
 import com.g5.teamtaskmanagement.dto.response.ProjectResponse;
+import com.g5.teamtaskmanagement.entity.ProjectMemberRole;
 
 import java.util.List;
 
@@ -24,6 +25,10 @@ public interface ProjectService {
     ProjectMemberResponse addProjectMember(Long projectId, ProjectMemberRequest request);
 
     ProjectMemberResponse updateProjectMemberRole(Long projectId, Long userId, UpdateProjectMemberRoleRequest request);
+
+    ProjectMemberResponse addProjectMemberRole(Long projectId, Long userId, ProjectMemberRole role);
+
+    void removeProjectMemberRole(Long projectId, Long userId, ProjectMemberRole role);
 
     void removeProjectMember(Long projectId, Long userId);
 }
