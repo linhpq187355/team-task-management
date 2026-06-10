@@ -10,6 +10,7 @@ import com.g5.teamtaskmanagement.repository.ProjectMemberRepository;
 import com.g5.teamtaskmanagement.repository.ProjectRepository;
 import com.g5.teamtaskmanagement.repository.WorkItemRepository;
 import com.g5.teamtaskmanagement.repository.WorkspaceMemberRepository;
+import com.g5.teamtaskmanagement.service.impl.PermissionServiceImpl;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -25,7 +26,7 @@ class PermissionServiceTest {
     private final ProjectMemberRepository projectMemberRepository = mock(ProjectMemberRepository.class);
     private final ProjectRepository projectRepository = mock(ProjectRepository.class);
     private final WorkItemRepository workItemRepository = mock(WorkItemRepository.class);
-    private final PermissionService permissionService = new PermissionService(workspaceMemberRepository,
+    private final PermissionService permissionService = new PermissionServiceImpl(workspaceMemberRepository,
             projectMemberRepository, projectRepository, workItemRepository);
 
     @Test

@@ -3,6 +3,7 @@ package com.g5.teamtaskmanagement.service;
 import com.g5.teamtaskmanagement.entity.User;
 import com.g5.teamtaskmanagement.exception.UnauthorizedException;
 import com.g5.teamtaskmanagement.security.CustomUserDetails;
+import com.g5.teamtaskmanagement.service.impl.CurrentUserServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CurrentUserServiceTest {
 
-    private final CurrentUserService currentUserService = new CurrentUserService();
+    private final CurrentUserService currentUserService = new CurrentUserServiceImpl();
 
     @AfterEach
     void tearDown() {
