@@ -15,7 +15,6 @@ import com.g5.teamtaskmanagement.exception.BadRequestException;
 import com.g5.teamtaskmanagement.exception.DuplicateResourceException;
 import com.g5.teamtaskmanagement.exception.ForbiddenException;
 import com.g5.teamtaskmanagement.exception.ResourceNotFoundException;
-import com.g5.teamtaskmanagement.repository.ProjectMemberRepository;
 import com.g5.teamtaskmanagement.repository.UserRepository;
 import com.g5.teamtaskmanagement.repository.WorkspaceMemberRepository;
 import com.g5.teamtaskmanagement.repository.WorkspaceRepository;
@@ -35,20 +34,17 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
     private final WorkspaceMemberRepository workspaceMemberRepository;
-    private final ProjectMemberRepository projectMemberRepository;
     private final UserRepository userRepository;
     private final CurrentUserService currentUserService;
     private final PermissionService permissionService;
 
     public WorkspaceServiceImpl(WorkspaceRepository workspaceRepository,
             WorkspaceMemberRepository workspaceMemberRepository,
-            ProjectMemberRepository projectMemberRepository,
             UserRepository userRepository,
             CurrentUserService currentUserService,
             PermissionService permissionService) {
         this.workspaceRepository = workspaceRepository;
         this.workspaceMemberRepository = workspaceMemberRepository;
-        this.projectMemberRepository = projectMemberRepository;
         this.userRepository = userRepository;
         this.currentUserService = currentUserService;
         this.permissionService = permissionService;
@@ -248,7 +244,6 @@ public class WorkspaceServiceImpl implements WorkspaceService {
             }
         }
 
-        projectMemberRepository.deleteByWorkspaceIdAndMemberId(workspaceId, memberId);
         workspaceMemberRepository.deleteByWorkspaceIdAndMemberId(workspaceId, memberId);
     }
 
