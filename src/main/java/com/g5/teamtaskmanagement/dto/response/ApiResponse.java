@@ -14,6 +14,12 @@ public class ApiResponse<T> {
     public ApiResponse() {
     }
 
+    public ApiResponse(boolean success, String message, T data) {
+        this.success = success;
+        this.message = message;
+        this.data = data;
+    }
+
     public ApiResponse(boolean success, String message, T data, List<String> errors) {
         this.success = success;
         this.message = message;
