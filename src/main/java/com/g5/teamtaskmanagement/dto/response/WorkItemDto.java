@@ -1,5 +1,6 @@
 package com.g5.teamtaskmanagement.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.g5.teamtaskmanagement.entity.WorkItemPriority;
 import com.g5.teamtaskmanagement.entity.WorkItemStatus;
 
@@ -12,12 +13,15 @@ public class WorkItemDto {
     private String description;
     private WorkItemStatus status;
     private WorkItemPriority priority;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
     private Long projectId;
     private Long workspaceId;
     private UserDto assignee;
     private UserDto createdBy;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
     public WorkItemDto(Long id, String title, String description, WorkItemStatus status, WorkItemPriority priority,

@@ -18,4 +18,14 @@ public interface WorkItemService {
     WorkItemDto getWorkItem(Long id);
 
     WorkItemDto updateWorkItem(Long id, UpdateWorkItemRequest request);
+
+    WorkItemDto startWorkItem(Long id);
+
+    WorkItemDto submitWorkItemForReview(Long id);
+
+    WorkItemDto approveWorkItem(Long id);
+
+    WorkItemDto requestChanges(Long id);
+
+    WorkItemDto cancelWorkItem(Long id);
 }

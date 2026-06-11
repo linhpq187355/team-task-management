@@ -1,5 +1,6 @@
 package com.g5.teamtaskmanagement.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.g5.teamtaskmanagement.entity.ProjectMemberRole;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ public class ProjectMemberResponse {
     private String email;
     private String fullName;
     private ProjectMemberRole role;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime joinedAt;
 
     public ProjectMemberResponse(Long id, Long userId, String email, String fullName, ProjectMemberRole role,
