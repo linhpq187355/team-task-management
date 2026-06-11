@@ -115,6 +115,66 @@ public class WorkItemServiceImpl implements WorkItemService {
         return toWorkItemDto(workItemRepository.save(workItem));
     }
 
+    @Override
+    @Transactional
+    public WorkItemDto startWorkItem(Long id) {
+        Long currentUserId = currentUserService.getCurrentUserId();
+        WorkItem workItem = getActiveWorkItem(id);
+        requireStatus(workItem, WorkItemStatus.TODO, "Only TODO tasks can be started");
+        requireAssigned(workItem);
+        requireTaskAssignee(id, currentUserId);
+
+        return transitionStatus(workItem, WorkItemStatus.IN_PROGRESS);
+    }
+
+    @Override
+    @Transactional
+    public WorkItemDto submitWorkItemForReview(Long id) {
+        Long currentUserId = currentUserService.getCurrentUserId();
+        WorkItem workItem = getActiveWorkItem(id);
+        requireStatus(workItem, WorkItemStatus.IN_PROGRESS, "Only IN_PROGRESS tasks can be submitted for review");
+        requireTaskAssignee(id, currentUserId);
+
+        return transitionStatus(workItem, WorkItemStatus.REVIEW);
+    }
+
+    @Override
+    @Transactional
+    public WorkItemDto approveWorkItem(Long id) {
+        Long currentUserId = currentUserService.getCurrentUserId();
+        WorkItem workItem = getActiveWorkItem(id);
+        requireStatus(workItem, WorkItemStatus.REVIEW, "Only REVIEW tasks can be approved");
+        requireCanManageTask(id, currentUserId);
+
+        return transitionStatus(workItem, WorkItemStatus.DONE);
+    }
+
+    @Override
+    @Transactional
+    public WorkItemDto requestChanges(Long id) {
+        Long currentUserId = currentUserService.getCurrentUserId();
+        WorkItem workItem = getActiveWorkItem(id);
+        requireStatus(workItem, WorkItemStatus.REVIEW, "Only REVIEW tasks can be sent back for changes");
+        requireCanManageTask(id, currentUserId);
+
+        return transitionStatus(workItem, WorkItemStatus.IN_PROGRESS);
+    }
+
+    @Override
+    @Transactional
+    public WorkItemDto cancelWorkItem(Long id) {
+        Long currentUserId = currentUserService.getCurrentUserId();
+        WorkItem workItem = getActiveWorkItem(id);
+        requireNotFinal(workItem);
+        if (workItem.getStatus() != WorkItemStatus.TODO && workItem.getStatus() != WorkItemStatus.IN_PROGRESS
+                && workItem.getStatus() != WorkItemStatus.REVIEW) {
+            throw new BadRequestException("Only TODO, IN_PROGRESS, or REVIEW tasks can be cancelled");
+        }
+        requireCanManageTask(id, currentUserId);
+
+        return transitionStatus(workItem, WorkItemStatus.CANCELLED);
+    }
+
     private Specification<WorkItem> buildSpecification(Long projectId, WorkItemStatus status,
             WorkItemPriority priority, Long assigneeId, String keyword) {
         return (root, query, criteriaBuilder) -> {
@@ -175,10 +235,40 @@ public class WorkItemServiceImpl implements WorkItemService {
         }
     }
 
+    private void requireTaskAssignee(Long taskId, Long userId) {
+        if (!permissionService.isTaskAssignee(taskId, userId)) {
+            throw new ForbiddenException("Only the task assignee can perform this action");
+        }
+    }
+
     private void requireEditable(WorkItem workItem) {
         if (workItem.getStatus() == WorkItemStatus.DONE || workItem.getStatus() == WorkItemStatus.CANCELLED) {
             throw new BadRequestException("Tasks in DONE or CANCELLED status cannot be updated");
         }
+    }
+
+    private void requireAssigned(WorkItem workItem) {
+        if (workItem.getAssignee() == null) {
+            throw new BadRequestException("Task must have an assignee before it can be started");
+        }
+    }
+
+    private void requireStatus(WorkItem workItem, WorkItemStatus expectedStatus, String message) {
+        requireNotFinal(workItem);
+        if (workItem.getStatus() != expectedStatus) {
+            throw new BadRequestException(message);
+        }
+    }
+
+    private void requireNotFinal(WorkItem workItem) {
+        if (workItem.getStatus() == WorkItemStatus.DONE || workItem.getStatus() == WorkItemStatus.CANCELLED) {
+            throw new BadRequestException("Tasks in DONE or CANCELLED status cannot change status");
+        }
+    }
+
+    private WorkItemDto transitionStatus(WorkItem workItem, WorkItemStatus targetStatus) {
+        workItem.setStatus(targetStatus);
+        return toWorkItemDto(workItemRepository.save(workItem));
     }
 
     private void validateDueDateForCreate(LocalDate dueDate) {

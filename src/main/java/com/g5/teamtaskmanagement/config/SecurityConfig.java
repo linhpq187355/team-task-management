@@ -1,6 +1,9 @@
 package com.g5.teamtaskmanagement.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import org.springframework.security.config.Customizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +24,7 @@ public class SecurityConfig {
                         JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
                 http
                                 .csrf(AbstractHttpConfigurer::disable)
+                                .cors(Customizer.withDefaults())
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers(
                                                                 "/swagger-ui.html",
@@ -42,7 +46,10 @@ public class SecurityConfig {
 
         @Bean
         public ObjectMapper objectMapper() {
-                return new ObjectMapper();
+                return JsonMapper.builder()
+                                .findAndAddModules()
+                                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                                .build();
         }
 
 }

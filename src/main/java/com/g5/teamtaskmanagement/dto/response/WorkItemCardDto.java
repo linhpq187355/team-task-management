@@ -1,5 +1,6 @@
 package com.g5.teamtaskmanagement.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.g5.teamtaskmanagement.entity.WorkItemPriority;
 import com.g5.teamtaskmanagement.entity.WorkItemStatus;
 
@@ -10,6 +11,7 @@ public class WorkItemCardDto {
     private String title;
     private WorkItemStatus status;
     private WorkItemPriority priority;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
     private UserDto assignee;
 
