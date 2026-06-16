@@ -1,5 +1,7 @@
 package com.g5.teamtaskmanagement.entity;
 
+import com.g5.teamtaskmanagement.enums.WorkspaceInvitationStatus;
+import com.g5.teamtaskmanagement.enums.WorkspaceMemberRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

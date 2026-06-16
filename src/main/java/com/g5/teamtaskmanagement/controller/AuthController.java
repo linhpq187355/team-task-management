@@ -9,7 +9,6 @@ import com.g5.teamtaskmanagement.dto.response.AuthResponse;
 import com.g5.teamtaskmanagement.service.AuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @Tag(name = "Auth Controller", description = "APIs for authentication")
-@SecurityRequirement(name = "bearerAuth")
 public class AuthController {
 
     private final AuthService authService;

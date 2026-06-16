@@ -1,6 +1,6 @@
 package com.g5.teamtaskmanagement.dto.request;
 
-import com.g5.teamtaskmanagement.entity.WorkItemPriority;
+import com.g5.teamtaskmanagement.enums.WorkItemPriority;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

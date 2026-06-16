@@ -4,8 +4,8 @@ import com.g5.teamtaskmanagement.dto.request.CreateWorkItemRequest;
 import com.g5.teamtaskmanagement.dto.request.UpdateWorkItemRequest;
 import com.g5.teamtaskmanagement.dto.response.WorkItemCardDto;
 import com.g5.teamtaskmanagement.dto.response.WorkItemDto;
-import com.g5.teamtaskmanagement.entity.WorkItemPriority;
-import com.g5.teamtaskmanagement.entity.WorkItemStatus;
+import com.g5.teamtaskmanagement.enums.WorkItemPriority;
+import com.g5.teamtaskmanagement.enums.WorkItemStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

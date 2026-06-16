@@ -5,7 +5,7 @@ import com.g5.teamtaskmanagement.dto.request.ProjectRequest;
 import com.g5.teamtaskmanagement.dto.request.UpdateProjectMemberRoleRequest;
 import com.g5.teamtaskmanagement.dto.response.ProjectMemberResponse;
 import com.g5.teamtaskmanagement.dto.response.ProjectResponse;
-import com.g5.teamtaskmanagement.entity.ProjectMemberRole;
+import com.g5.teamtaskmanagement.enums.ProjectMemberRole;
 
 import java.util.List;
 

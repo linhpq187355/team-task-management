@@ -7,7 +7,7 @@ import com.g5.teamtaskmanagement.dto.response.ProjectMemberResponse;
 import com.g5.teamtaskmanagement.dto.response.ProjectResponse;
 import com.g5.teamtaskmanagement.entity.Project;
 import com.g5.teamtaskmanagement.entity.ProjectMember;
-import com.g5.teamtaskmanagement.entity.ProjectMemberRole;
+import com.g5.teamtaskmanagement.enums.ProjectMemberRole;
 import com.g5.teamtaskmanagement.entity.User;
 import com.g5.teamtaskmanagement.entity.Workspace;
 import com.g5.teamtaskmanagement.exception.BadRequestException;

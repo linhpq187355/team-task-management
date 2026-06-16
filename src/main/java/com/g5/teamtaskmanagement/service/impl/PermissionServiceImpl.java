@@ -1,9 +1,9 @@
 package com.g5.teamtaskmanagement.service.impl;
 
 import com.g5.teamtaskmanagement.entity.Project;
-import com.g5.teamtaskmanagement.entity.ProjectMemberRole;
+import com.g5.teamtaskmanagement.enums.ProjectMemberRole;
 import com.g5.teamtaskmanagement.entity.WorkItem;
-import com.g5.teamtaskmanagement.entity.WorkspaceMemberRole;
+import com.g5.teamtaskmanagement.enums.WorkspaceMemberRole;
 import com.g5.teamtaskmanagement.repository.ProjectMemberRepository;
 import com.g5.teamtaskmanagement.repository.ProjectRepository;
 import com.g5.teamtaskmanagement.repository.WorkItemRepository;

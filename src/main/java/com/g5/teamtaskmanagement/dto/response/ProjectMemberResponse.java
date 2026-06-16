@@ -1,7 +1,7 @@
 package com.g5.teamtaskmanagement.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.g5.teamtaskmanagement.entity.ProjectMemberRole;
+import com.g5.teamtaskmanagement.enums.ProjectMemberRole;
 
 import java.time.LocalDateTime;
 

@@ -6,7 +6,7 @@ import com.g5.teamtaskmanagement.dto.request.UpdateProjectMemberRoleRequest;
 import com.g5.teamtaskmanagement.dto.response.ApiResponse;
 import com.g5.teamtaskmanagement.dto.response.ProjectMemberResponse;
 import com.g5.teamtaskmanagement.dto.response.ProjectResponse;
-import com.g5.teamtaskmanagement.entity.ProjectMemberRole;
+import com.g5.teamtaskmanagement.enums.ProjectMemberRole;
 import com.g5.teamtaskmanagement.service.ProjectService;
 
 import io.swagger.v3.oas.annotations.Operation;

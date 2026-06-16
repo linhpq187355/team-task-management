@@ -1,5 +1,8 @@
 package com.g5.teamtaskmanagement.entity;
 
+import com.g5.teamtaskmanagement.enums.WorkItemPriority;
+import com.g5.teamtaskmanagement.enums.WorkItemStatus;
+import com.g5.teamtaskmanagement.enums.WorkItemType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
