@@ -4,17 +4,17 @@ import com.g5.teamtaskmanagement.dto.request.AddWorkspaceMemberRequest;
 import com.g5.teamtaskmanagement.dto.request.CreateWorkspaceRequest;
 import com.g5.teamtaskmanagement.dto.request.UpdateWorkspaceMemberRoleRequest;
 import com.g5.teamtaskmanagement.dto.request.UpdateWorkspaceRequest;
-import com.g5.teamtaskmanagement.dto.response.UserDto;
 import com.g5.teamtaskmanagement.dto.response.WorkspaceDto;
 import com.g5.teamtaskmanagement.dto.response.WorkspaceMemberDto;
 import com.g5.teamtaskmanagement.entity.Workspace;
 import com.g5.teamtaskmanagement.entity.WorkspaceMember;
-import com.g5.teamtaskmanagement.entity.WorkspaceMemberRole;
+import com.g5.teamtaskmanagement.enums.WorkspaceMemberRole;
 import com.g5.teamtaskmanagement.entity.User;
 import com.g5.teamtaskmanagement.exception.BadRequestException;
 import com.g5.teamtaskmanagement.exception.DuplicateResourceException;
 import com.g5.teamtaskmanagement.exception.ForbiddenException;
 import com.g5.teamtaskmanagement.exception.ResourceNotFoundException;
+import com.g5.teamtaskmanagement.mapper.WorkspaceMapper;
 import com.g5.teamtaskmanagement.repository.UserRepository;
 import com.g5.teamtaskmanagement.repository.WorkspaceMemberRepository;
 import com.g5.teamtaskmanagement.repository.WorkspaceRepository;
@@ -37,17 +37,20 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     private final UserRepository userRepository;
     private final CurrentUserService currentUserService;
     private final PermissionService permissionService;
+    private final WorkspaceMapper workspaceMapper;
 
     public WorkspaceServiceImpl(WorkspaceRepository workspaceRepository,
             WorkspaceMemberRepository workspaceMemberRepository,
             UserRepository userRepository,
             CurrentUserService currentUserService,
-            PermissionService permissionService) {
+            PermissionService permissionService,
+            WorkspaceMapper workspaceMapper) {
         this.workspaceRepository = workspaceRepository;
         this.workspaceMemberRepository = workspaceMemberRepository;
         this.userRepository = userRepository;
         this.currentUserService = currentUserService;
         this.permissionService = permissionService;
+        this.workspaceMapper = workspaceMapper;
     }
 
     @Override
@@ -69,7 +72,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         owner.setJoinedAt(LocalDateTime.now());
         workspaceMemberRepository.save(owner);
 
-        return mapToDto(workspace, currentUser.getId());
+        return workspaceMapper.toDto(workspace, currentUser.getId());
     }
 
     @Override
@@ -79,7 +82,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         // Get all workspaces where user is a member and workspace is not deleted
         return workspaceMemberRepository.findByMemberId(userId).stream()
                 .filter(member -> member.getWorkspace().getDeletedAt() == null)
-                .map(member -> mapToDto(member.getWorkspace(), userId))
+                .map(member -> workspaceMapper.toDto(member.getWorkspace(), userId))
                 .collect(Collectors.toList());
     }
 
@@ -95,7 +98,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         Workspace workspace = workspaceRepository.findByIdAndDeletedAtIsNull(workspaceId)
                 .orElseThrow(() -> new ResourceNotFoundException("Workspace not found"));
 
-        return mapToDto(workspace, userId);
+        return workspaceMapper.toDto(workspace, userId);
     }
 
     @Override
@@ -114,7 +117,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         workspace.setDescription(request.getDescription());
         workspace = workspaceRepository.save(workspace);
 
-        return mapToDto(workspace, userId);
+        return workspaceMapper.toDto(workspace, userId);
     }
 
     @Override
@@ -148,7 +151,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         }
 
         return workspaceMemberRepository.findByWorkspaceId(workspaceId).stream()
-                .map(this::mapToMemberDto)
+                .map(workspaceMapper::toMemberDto)
                 .collect(Collectors.toList());
     }
 
@@ -180,7 +183,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
         workspaceMember = workspaceMemberRepository.save(workspaceMember);
 
-        return mapToMemberDto(workspaceMember);
+        return workspaceMapper.toMemberDto(workspaceMember);
     }
 
     @Override
@@ -214,7 +217,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         workspaceMember.setRole(request.getRole());
         workspaceMember = workspaceMemberRepository.save(workspaceMember);
 
-        return mapToMemberDto(workspaceMember);
+        return workspaceMapper.toMemberDto(workspaceMember);
     }
 
     @Override
@@ -247,32 +250,4 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         workspaceMemberRepository.deleteByWorkspaceIdAndMemberId(workspaceId, memberId);
     }
 
-    private WorkspaceDto mapToDto(Workspace workspace, Long userId) {
-        WorkspaceDto dto = new WorkspaceDto();
-        dto.setId(workspace.getId());
-        dto.setName(workspace.getName());
-        dto.setDescription(workspace.getDescription());
-        dto.setCreatedAt(workspace.getCreatedAt());
-
-        // Get current user's role
-        workspaceMemberRepository.findByWorkspaceIdAndMemberId(workspace.getId(), userId)
-                .ifPresent(member -> dto.setMyRole(member.getRole()));
-
-        return dto;
-    }
-
-    private WorkspaceMemberDto mapToMemberDto(WorkspaceMember member) {
-        WorkspaceMemberDto dto = new WorkspaceMemberDto();
-        dto.setId(member.getId());
-        dto.setRole(member.getRole());
-        dto.setJoinedAt(member.getJoinedAt());
-
-        UserDto userDto = new UserDto();
-        userDto.setId(member.getMember().getId());
-        userDto.setEmail(member.getMember().getEmail());
-        userDto.setFullName(member.getMember().getFullName());
-        dto.setUser(userDto);
-
-        return dto;
-    }
 }

@@ -1,7 +1,7 @@
 package com.g5.teamtaskmanagement.security;
 
 import com.g5.teamtaskmanagement.entity.User;
-import com.g5.teamtaskmanagement.entity.UserStatus;
+import com.g5.teamtaskmanagement.enums.UserStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

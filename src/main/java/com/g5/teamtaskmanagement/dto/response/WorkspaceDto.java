@@ -1,7 +1,7 @@
 package com.g5.teamtaskmanagement.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.g5.teamtaskmanagement.entity.WorkspaceMemberRole;
+import com.g5.teamtaskmanagement.enums.WorkspaceMemberRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,7 +1,7 @@
 package com.g5.teamtaskmanagement.repository;
 
 import com.g5.teamtaskmanagement.entity.ProjectMember;
-import com.g5.teamtaskmanagement.entity.ProjectMemberRole;
+import com.g5.teamtaskmanagement.enums.ProjectMemberRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

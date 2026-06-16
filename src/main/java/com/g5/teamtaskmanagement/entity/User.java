@@ -1,5 +1,6 @@
 package com.g5.teamtaskmanagement.entity;
 
+import com.g5.teamtaskmanagement.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

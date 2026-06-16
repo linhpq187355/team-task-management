@@ -1,5 +1,6 @@
 package com.g5.teamtaskmanagement.entity;
 
+import com.g5.teamtaskmanagement.enums.ProjectMemberRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

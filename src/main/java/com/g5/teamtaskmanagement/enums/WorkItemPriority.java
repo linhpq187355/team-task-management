@@ -1,4 +1,4 @@
-package com.g5.teamtaskmanagement.entity;
+package com.g5.teamtaskmanagement.enums;
 
 public enum WorkItemPriority {
     LOW,

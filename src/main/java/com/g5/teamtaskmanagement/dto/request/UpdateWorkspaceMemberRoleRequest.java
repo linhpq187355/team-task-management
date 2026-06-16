@@ -1,6 +1,6 @@
 package com.g5.teamtaskmanagement.dto.request;
 
-import com.g5.teamtaskmanagement.entity.WorkspaceMemberRole;
+import com.g5.teamtaskmanagement.enums.WorkspaceMemberRole;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

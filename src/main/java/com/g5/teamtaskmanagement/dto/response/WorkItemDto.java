@@ -1,8 +1,8 @@
 package com.g5.teamtaskmanagement.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.g5.teamtaskmanagement.entity.WorkItemPriority;
-import com.g5.teamtaskmanagement.entity.WorkItemStatus;
+import com.g5.teamtaskmanagement.enums.WorkItemPriority;
+import com.g5.teamtaskmanagement.enums.WorkItemStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
