@@ -8,6 +8,7 @@ import com.g5.teamtaskmanagement.dto.response.WorkItemDto;
 import com.g5.teamtaskmanagement.entity.WorkItemPriority;
 import com.g5.teamtaskmanagement.entity.WorkItemStatus;
 import com.g5.teamtaskmanagement.service.WorkItemService;
+import org.springdoc.core.annotations.ParameterObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -53,7 +54,7 @@ public class WorkItemController {
             @RequestParam(required = false) WorkItemPriority priority,
             @RequestParam(required = false) Long assigneeId,
             @RequestParam(required = false) String keyword,
-            @PageableDefault(size = 10, sort = "dueDate") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10, sort = "dueDate") Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.success("Tasks loaded",
                 workItemService.getProjectWorkItems(projectId, status, priority, assigneeId, keyword, pageable)));
     }
