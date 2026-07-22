@@ -6,7 +6,7 @@ Tài liệu này cung cấp toàn bộ bối cảnh nghiệp vụ, kiến trúc 
 
 ## 1. TECH STACK & KIẾN TRÚC PHẦN MỀM
 
-* **Ngôn ngữ & Framework:** Java 17, Spring Boot 3.x
+* **Ngôn ngữ & Framework:** Java 17, Spring Boot 4.0.6
 * **Quản lý Thư viện:** Maven
 * **Bảo mật & Xác thực:** Spring Security + JWT (Access Token ngắn hạn & Refresh Token lưu DB)
 * **Tương tác Cơ sở Dữ liệu:** Spring Data JPA / Hibernate
@@ -104,7 +104,7 @@ Trạng thái của `work_items` (với `type = 'TASK'`) di chuyển nghiêm ng�
 ## 6. CHỈ DẪN GENERATE CODE CHO AI
 
 * **Validation:** Luôn sử dụng `@Valid` và các annotation như `@NotBlank`, `@NotNull`, `@Min` trong DTOs để validate dữ liệu đầu vào tại Controller.
-* **Exception Handling:** Xây dựng một `@ControllerAdvice` tập trung để xử lý các ngoại lệ (`ResourceNotFoundException`, `BadRequestException`, `UnauthorizedException`). Trả về cấu hình JSON lỗi đồng nhất: `{ "timestamp", "status", "error", "message", "path" }`.
+* **Exception Handling:** Đã có `@RestControllerAdvice` tập trung tại `exception/GlobalExceptionHandler` xử lý các ngoại lệ (`ResourceNotFoundException`, `BadRequestException`, `UnauthorizedException`, `ForbiddenException`, `DuplicateResourceException`, lỗi validation). Ném các domain exception này thay vì tự dựng response lỗi trong service. Toàn bộ response (thành công lẫn lỗi) dùng chung wrapper `ApiResponse<T>`; body lỗi có dạng: `{ "success": false, "errorCode", "message", "errors": [...] }`.
 * **Kiểm tra quyền (Authorization):** Việc check quyền giữa Workspace Owner, Project Manager và Developer cần được xử lý ở tầng Service hoặc custom AOP/Spring Security Expression một cách tường minh, đảm bảo tuân thủ đúng quy tắc kế thừa quyền của `Workspace Owner`.
 * **Format ngày tháng:** Định dạng JSON cho các trường ngày tháng là `yyyy-MM-dd` hoặc `yyyy-MM-dd HH:mm:ss`.
 
