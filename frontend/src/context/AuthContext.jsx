@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
       try {
         await authApi.logout(refreshToken)
       } catch {
-        // token already gone client-side; ignore server error
+        
       }
     }
   }, [])
