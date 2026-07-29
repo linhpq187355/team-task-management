@@ -13,6 +13,7 @@ export default function WorkspaceDetailPage() {
   const [error, setError] = useState('')
   const [showCreateProject, setShowCreateProject] = useState(false)
   const [showAddMember, setShowAddMember] = useState(false)
+  const [confirmAction, setConfirmAction] = useState(null) // { title, message, onConfirm }
 
   function load() {
     setError('')
@@ -34,23 +35,33 @@ export default function WorkspaceDetailPage() {
   const isOwner = workspace?.myRole === 'OWNER'
 
   async function handleDeleteWorkspace() {
-    if (!confirm('Delete this workspace? This can be undone by an admin only.')) return
-    try {
-      await workspaceApi.remove(workspaceId)
-      navigate('/workspaces')
-    } catch (err) {
-      setError(err.message)
-    }
+    setConfirmAction({
+      title: 'Delete workspace',
+      message: 'Are you sure you want to delete this workspace? This can be undone by an admin only.',
+      onConfirm: async () => {
+        try {
+          await workspaceApi.remove(workspaceId)
+          navigate('/workspaces')
+        } catch (err) {
+          setError(err.message)
+        }
+      },
+    })
   }
 
   async function handleRemoveMember(userId) {
-    if (!confirm('Remove this member from the workspace?')) return
-    try {
-      await workspaceApi.removeMember(workspaceId, userId)
-      load()
-    } catch (err) {
-      setError(err.message)
-    }
+    setConfirmAction({
+      title: 'Remove member',
+      message: 'Are you sure you want to remove this member from the workspace?',
+      onConfirm: async () => {
+        try {
+          await workspaceApi.removeMember(workspaceId, userId)
+          load()
+        } catch (err) {
+          setError(err.message)
+        }
+      },
+    })
   }
 
   async function handleRoleChange(userId, role) {
@@ -162,6 +173,30 @@ export default function WorkspaceDetailPage() {
             load()
           }}
         />
+      )}
+      {confirmAction && (
+        <Modal title={confirmAction.title} onClose={() => setConfirmAction(null)}>
+          <div>
+            <p>{confirmAction.message}</p>
+            <div className="btn-row" style={{ justifyContent: 'flex-end' }}>
+              <button
+                className="secondary-btn"
+                onClick={() => setConfirmAction(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="danger-btn"
+                onClick={() => {
+                  confirmAction.onConfirm()
+                  setConfirmAction(null)
+                }}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   )

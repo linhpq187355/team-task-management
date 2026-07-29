@@ -59,7 +59,7 @@ export default function TaskBoardPage() {
       <div className="page-header">
         <div>
           <Link to={`/projects/${projectId}`} className="crumb-back">
-            ← back to project
+            ← Back to project
           </Link>
           <h2>Task board</h2>
         </div>

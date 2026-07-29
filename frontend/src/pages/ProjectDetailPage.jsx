@@ -13,6 +13,7 @@ export default function ProjectDetailPage() {
   const [error, setError] = useState('')
   const [editing, setEditing] = useState(false)
   const [showAddMember, setShowAddMember] = useState(false)
+  const [confirmAction, setConfirmAction] = useState(null) // { title, message, onConfirm }
 
   function load() {
     setError('')
@@ -35,23 +36,33 @@ export default function ProjectDetailPage() {
     project?.myRole === 'PROJECT_MANAGER' || project?.myRoles?.includes('PROJECT_MANAGER')
 
   async function handleDelete() {
-    if (!confirm('Delete this project?')) return
-    try {
-      await projectApi.remove(projectId)
-      navigate(`/workspaces/${project.workspaceId}`)
-    } catch (err) {
-      setError(err.message)
-    }
+    setConfirmAction({
+      title: 'Delete project',
+      message: 'Are you sure you want to delete this project?',
+      onConfirm: async () => {
+        try {
+          await projectApi.remove(projectId)
+          navigate(`/workspaces/${project.workspaceId}`)
+        } catch (err) {
+          setError(err.message)
+        }
+      },
+    })
   }
 
   async function handleRemoveMember(userId) {
-    if (!confirm('Remove this member from the project?')) return
-    try {
-      await projectApi.removeMember(projectId, userId)
-      load()
-    } catch (err) {
-      setError(err.message)
-    }
+    setConfirmAction({
+      title: 'Remove member',
+      message: 'Are you sure you want to remove this member from the project?',
+      onConfirm: async () => {
+        try {
+          await projectApi.removeMember(projectId, userId)
+          load()
+        } catch (err) {
+          setError(err.message)
+        }
+      },
+    })
   }
 
   async function handleRoleChange(userId, role) {
@@ -75,7 +86,7 @@ export default function ProjectDetailPage() {
       <div className="page-header">
         <div>
           <Link to={`/workspaces/${project.workspaceId}`} className="crumb-back">
-            ← back to workspace
+            ← Back to workspace
           </Link>
           <h2>{project.name}</h2>
           <p className="muted">{project.description}</p>
@@ -162,6 +173,30 @@ export default function ProjectDetailPage() {
             load()
           }}
         />
+      )}
+      {confirmAction && (
+        <Modal title={confirmAction.title} onClose={() => setConfirmAction(null)}>
+          <div>
+            <p>{confirmAction.message}</p>
+            <div className="btn-row" style={{ justifyContent: 'flex-end' }}>
+              <button
+                className="secondary-btn"
+                onClick={() => setConfirmAction(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="danger-btn"
+                onClick={() => {
+                  confirmAction.onConfirm()
+                  setConfirmAction(null)
+                }}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   )

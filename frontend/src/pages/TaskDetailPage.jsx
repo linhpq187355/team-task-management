@@ -57,8 +57,8 @@ export default function TaskDetailPage() {
 
   return (
     <div className="page-narrow">
-      <Link to={`/projects/${task.projectId}`} className="crumb-back">
-        ← back to project
+      <Link to={`/projects/${task.projectId}/board`} className="crumb-back">
+        ← Back to task board
       </Link>
 
       <div className="page-header">
